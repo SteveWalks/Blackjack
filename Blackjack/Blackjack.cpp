@@ -1,11 +1,18 @@
 #include "Blackjack.h"
 
+//Blackjack 1-arg constructor which accepts a string that represents the users name
 Blackjack::Blackjack(string name)
 {
 	userName = name;
 }//end constructor
 
-
+ /**
+ * Date: June 14th, 2015
+ * Method Name: getCard()
+ * Purpose: produces random card values between 1 and 13
+ * Accepts: an int representing a card
+ * Returns: the the value that the card will have.
+ */
 int Blackjack::getCard(int card)
 {
 	int m = card / 13;
@@ -20,14 +27,28 @@ int Blackjack::getCard(int card)
 	return n;
 }
 
+/**
+* Date: June 15th, 2015
+* Method Name: shuffle()
+* Purpose: Produce random numbers between 1 and 52
+* Accepts: nothing
+* Returns: an int that represents a card
+*/
 int Blackjack::shuffle()
 {
+	//give n a random number and return it
 	int n = rand() % 52 + 1;
 	return n;
 }//end method
 
 
-
+ /**
+ * Date: June 14th, 2015
+ * Method Name: displayDealerHand()
+ * Purpose: display the dealers hand with 1 card hidden from the user
+ * Accepts: a vector that is the dealers hand
+ * Returns: nothing
+ */
 void Blackjack::displayDealerHand(vector<string> hand)
 {
 
@@ -49,9 +70,16 @@ void Blackjack::displayDealerHand(vector<string> hand)
 
 }//end function
 
-
+ /**
+ * Date: June 14th, 2015
+ * Method Name: displayHand()
+ * Purpose: display the users hand
+ * Accepts: a vector that is the users hand
+ * Returns: nothing
+ */
 void Blackjack::displayHand(vector<string> hand)
 {
+	//output each card in hand
 	for (int i = 0; i < hand.size(); i++)
 	{
 		cout << hand[i] << ", ";
@@ -60,7 +88,13 @@ void Blackjack::displayHand(vector<string> hand)
 	cout << endl;
 }//end function
 
-
+ /**
+ * Date: June 14th, 2015
+ * Method Name: getAceValue()
+ * Purpose: If user acquires an ACE, they are given the option between a 1 as its value, or an 11.
+ * Accepts: an int reference to the users hand
+ * Returns: returns the hand with the ace value added to it
+ */
 int getAceValue(int &userHand)
 {
 	//flush buffer
@@ -142,7 +176,6 @@ void Blackjack::startGame()
 	card[cardName[12]] = 11;
 
 
-
 	//Output rules and make sure the user wants to play.
 	cout << "Alright " << userName << ", this is Blackjack, best of 5 hands wins, you sittin' in?" << endl;
 
@@ -154,7 +187,6 @@ void Blackjack::startGame()
 		userInput = toupper(userInput);//convert to uppercase for easier comparison
 
 	}//end while
-
 
 
 	//if user enters Y, playing evaluates to true and we give the user 10 Poker Chips
@@ -250,7 +282,6 @@ void Blackjack::startGame()
 			deck.clear();
 			mp.clear();
 
-
 			//output player bet, game #, and wins for each player
 			cout << "===============GAME=STATS=================" << endl;
 			cout << "GAME " << gameCounter << endl;
@@ -259,12 +290,13 @@ void Blackjack::startGame()
 			int randCard = shuffle();
 			int usedCard = 1;//
 
-			//shuffle deck, MAKE METHOD AFTER
+
+			//shuffle deck
 			for (int i = 0; i < 52; i++)
 			{
 				while (mp[randCard] == usedCard)//while a card has already been placed in the deck, we search for another card.
 				{
-					randCard = shuffle();//so we must generate a new card 
+					randCard = shuffle();//generate a new card 
 				}//end while
 
 				mp[randCard] = 1;//the card added to the deck will now = 1 so we know its been added already.
@@ -273,23 +305,22 @@ void Blackjack::startGame()
 			}//end for
 
 			
-			
-
 			//gives the player and dealer 2 cards each
 			userCards.push_back(deck[0]);
 			userCards.push_back(deck[1]);
 			dealerCards.push_back(deck[2]);
 			dealerCards.push_back(deck[3]);
 
+
 			//we need to put the dealers second card face down so the user cannot see it	
 			dealerHand = 0;
 			userHand = 0;
+
 
 			//output users hand
 			/*takes users cards, adds them together and puts them in userHand
 			this lets us to keep track of the users cards sum*/
 			userHand = card[userCards[0]] + card[userCards[1]];
-
 			//do the same with dealerHand
 			dealerHand = card[dealerCards[0]] + card[dealerCards[1]];
 			
@@ -300,7 +331,6 @@ void Blackjack::startGame()
 			dealer_stay = false;
 
 
-
 			//while neither player has decided to STAY this loop runs.
 			while (user_stay == false || dealer_stay == false)
 			{
@@ -309,10 +339,10 @@ void Blackjack::startGame()
 				cout << "Dealers Hand: ";
 				displayDealerHand(dealerCards);//displays all cards with 1 face down.
 
+
 				cout << "\n" << userName << "'s Hand: ";
 				displayHand(userCards);//displays all cards
 				cout << userName << " has: " << userHand << endl;
-
 
 
 				//see if someone has blackjack already(if dealt an ace + 10,J,K or Q)
@@ -369,6 +399,7 @@ void Blackjack::startGame()
 				cin.clear();
 				fflush(stdin);
 
+
 				/*IF user choses to 'hit' we give them another card,
 				ELSE they stay with what they have and we break the
 				loop and compare their hand with the dealers*/
@@ -389,10 +420,12 @@ void Blackjack::startGame()
 						cout << "\n" << endl;
 					}//end inner if
 
+
 					//display hand to user
 					cout << userName << "'s Hand: ";
 					displayHand(userCards);
 					cout << userName << " has: " << userHand << endl;
+
 
 					//if users new card puts their score over 21, user loses.
 					if (userHand > 21)
@@ -426,6 +459,7 @@ void Blackjack::startGame()
 						dealerHand += card[dealerCards[dealerCards.size() - 1]];//adds one more card to dealers hand.
 						++count;//increase count so the next card is different.
 
+
 						//if dealers last card is an ace and it puts him over 21, dealer decides to make ACE value == 1.
 						if (dealerCards.back() == "ACE" && dealerHand > 21)
 						{
@@ -433,6 +467,7 @@ void Blackjack::startGame()
 							dealerHand -= 10;//take 10 off of dealers sum
 							cout << "\nDealer gets an ACE!\nDealer: I'll make its value a 1." << endl;
 						}//end inner if
+
 
 						//check dealers status for under 21, blackjack, or bust.
 						if (dealerHand < 21)
@@ -464,9 +499,6 @@ void Blackjack::startGame()
 					}//end middle if else
 
 				}//end outer if
-
-
-
 
 
 
@@ -505,15 +537,16 @@ void Blackjack::startGame()
 
 		}//end middle while
 
+
 		//output game stats
 		cout << "\n" << userName << "'s GAMES WON: " << userWins << "\nDEALER GAMES WON: " << dealerWins << "\n"
 			"DRAWS: " << drawCounter << endl;
-
 		cout << "================BEST=OF=THREE=HANDS=IS=OVER===================" << endl;
 
 		//flush buffer
 		cin.clear();
 		fflush(stdin);
+
 
 		/*if the user wins we return double their initial bet and we ask them if
 		they want to play again, if they play again they keep their winnings,
